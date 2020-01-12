@@ -3,19 +3,20 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: smile2coder
 subtitle: ''
-description: ''
-keywords:
-author: John Doe
+description: '励志做一个有思想的coder'
+keywords: Java
+author: smile2coder
 language: zh-CN
 timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://kooper1029.github.io/smile-coder.github.io
+url: https://smile2coder.github.io/
 root: /
-permalink: :year/:month/:day/:title/
+# permalink: :year/:month/:day/:title/
+permalink: :title/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -51,7 +52,7 @@ highlight:
   tab_replace: ''
   wrap: true
   hljs: false
-  
+
 ## 代码高亮
 prism_plugin:
   mode: 'preprocess'    # realtime/preprocess
@@ -69,16 +70,6 @@ permalink_pinyin:
   enable: true
   separator: '-' # default: '-'
 
-## 文章字数统计插件
-postInfo:
-  date: true
-  update: false
-  wordCount: true # 设置文章字数统计为 true.
-  totalCount: true # 设置站点文章总字数统计为 true.
-  min2read: true # 阅读时长.
-  readCount: true # 阅读次数.
-
-## 添加emoji表情支持（可选的）
 githubEmojis:
   enable: true
   className: github-emoji
@@ -127,12 +118,12 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-## theme: landscape
+# theme: landscape
 theme: hexo-theme-matery
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/kooper1029/smile-coder.github.io
+  repository: https://github.com/smile2coder/smile2coder.github.io.git
   branch: master
