@@ -5,7 +5,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="article title, Hexo">
-    <meta name="description" content="article title | Hexo">
+    <meta name="description" content="
+        document.querySelectorAll(&#39;.github-emoji&#39;)
+          .forEach(el =&gt; {
+            if (!el.dataset.src) { return">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -26,7 +29,7 @@
     
     <script src="/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/smile-coder.github.io/css/prism-tomorrow.css" type="text/css"></head>
 
 
 <body>
@@ -34,7 +37,7 @@
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper head-container">
             <div class="brand-logo">
-                <a href="/" class="waves-effect waves-light">
+                <a href="/smile-coder.github.io/" class="waves-effect waves-light">
                     
                     <img src="/medias/logo.png" class="logo-img" alt="LOGO">
                     
@@ -454,7 +457,25 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
             </div>
             <hr/>
 
@@ -469,7 +490,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://kooper1029.github.io/smile-coder.github.io" rel="external nofollow noreferrer">John Doe</a>
+                    <a href="https://kooper1029.github.io" rel="external nofollow noreferrer">John Doe</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -492,7 +513,7 @@
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="https://kooper1029.github.io/smile-coder.github.io" target="_blank">John Doe</a>
+                    <a href="https://kooper1029.github.io" target="_blank">John Doe</a>
                     !
                 </span>
             </div>
@@ -685,7 +706,7 @@
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/2020/01/10/article-title/">
+                <a href="/smile-coder.github.io/2020/01/10/article-title/">
                     <div class="card-image">
                         
                         
@@ -698,6 +719,9 @@
                     <div class="summary block-with-text">
                         
                             
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return
                         
                     </div>
                     <div class="publish-info">
@@ -723,7 +747,7 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/01/10/hello-world/">
+                <a href="/smile-coder.github.io/2020/01/10/hello-world/">
                     <div class="card-image">
                         
                         
@@ -891,7 +915,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             <span id="year">2019</span>
-            <a href="https://kooper1029.github.io/smile-coder.github.io" target="_blank">John Doe</a>
+            <a href="https://kooper1029.github.io" target="_blank">John Doe</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
             |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
             <br>
@@ -944,7 +968,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 
 
 
-    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+    <a href="/smile-coder.github.io/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
         <i class="fas fa-rss"></i>
     </a>
 
@@ -970,7 +994,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 <script src="/js/search.js"></script>
 <script type="text/javascript">
 $(function () {
-    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+    searchFunc("/smile-coder.github.io/" + "search.xml", 'searchInput', 'searchResult');
 });
 </script>
     <!-- 回到顶部按钮 -->
