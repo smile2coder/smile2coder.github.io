@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Lombok-你的开发利器, Java">
-    <meta name="description" content="Lombok-你的开发利器">
+    <meta name="keywords" content="SpringBoot应用中利用AOP实现操作日志记录, Java">
+    <meta name="description" content="SpringBoot应用中利用AOP实现操作日志记录">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Lombok-你的开发利器 | smile2coder</title>
+    <title>SpringBoot应用中利用AOP实现操作日志记录 | smile2coder</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -303,12 +303,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Lombok-你的开发利器</h1>
+                    <h1 class="description center-align post-title">SpringBoot应用中利用AOP实现操作日志记录</h1>
                 </div>
             </div>
         </div>
@@ -425,8 +425,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/lombok/">
-                                <span class="chip bg-color">lombok</span>
+                            <a href="/tags/AOP/">
+                                <span class="chip bg-color">AOP</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97/">
+                                <span class="chip bg-color">记录日志</span>
+                            </a>
+                        
+                            <a href="/tags/SpringBoot/">
+                                <span class="chip bg-color">SpringBoot</span>
                             </a>
                         
                     </div>
@@ -437,8 +445,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/lombok/" class="post-category">
-                                lombok
+                            <a href="/categories/SpringBoot/" class="post-category">
+                                SpringBoot
                             </a>
                         
                     </div>
@@ -450,7 +458,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-01-16
+                    2020-01-20
                 </div>
                 
 
@@ -459,14 +467,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.2k
+                    831
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    14 分
+                    4 分
                 </div>
                 
 
@@ -482,483 +490,156 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>本文的代码在<a href="https://github.com/smile2coder/springboot-collection" target="_blank" rel="noopener">这里</a>，希望收到一个star，感谢支持</p>
-<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>Lombok项目是一个Java库，它会自动插入您的编辑器和构建工具中，从而为您的Java增光添彩。 永远不要再写另一个getter或equals方法，带有一个注释的您的类有一个功能全面的生成器，自动化您的日志记录变量等等。但是Lombok在使用过程中也有许多值得注意的点，如果不清楚的话，可能会给代码调试带来意想不到的后果！！！</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>从<a href="https://projectlombok.org/" target="_blank" rel="noopener">Lombok</a>的官网中可以了解到，目前Lombok插件支持Eclipse，MyEclipse，IntelliJ IDEA, Netbeans等主流开发工具。当然，我们也可以在开发工具中直接获取该插件。 </p>
-<h2 id="引入依赖（Maven）"><a href="#引入依赖（Maven）" class="headerlink" title="引入依赖（Maven）"></a>引入依赖（Maven）</h2><pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
-    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
-    &lt;optional&gt;true&lt;/optional&gt;
-&lt;/dependency&gt;</code></pre><h2 id="这个要怎么玩"><a href="#这个要怎么玩" class="headerlink" title="这个要怎么玩"></a>这个要怎么玩</h2><p>重点来了，这么好的工具要怎么用？且听我慢慢道来…</p>
-<h4 id="Getter-Setter"><a href="#Getter-Setter" class="headerlink" title="@Getter/@Setter"></a>@Getter/@Setter</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@Getter/@Setter可以修饰在成员变量和类上。修饰在成员变量上时，会生成该变量的getter()和setter()方法；修饰在类上时，会生成该类中所有的非静态成员变量生成getter()和setter()方法。我们还可以为getter()和setter()方法设置访问级别。当然我们需要的就是public级别，而这个也恰好是默认的。</p>
-<pre><code>@Getter
-//@Setter(value = AccessLevel.PROTECTED)
-@Setter
-public class GetterSetterDemo {
-    String name;
-    int age;
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class GetterSetterDemo {
-    private String name;
-    private int age;
+                <h4 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h4><p>在SpringBoot应用开发中，记录用户的操作日志是必不可少的，下面介绍一下利用AOP实现操作日志记录。  </p>
+<p>本文使用了Lombok，不懂的同学建议了解一下</p>
+<h4 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h4><p>首先构建一个SpringBoot项目，引入依赖</p>
+<pre><code>&lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
 
-    public String getName() {
-        return name;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+            &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.junit.vintage&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-vintage-engine&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+        &lt;!-- 一个工具包 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;cn.hutool&lt;/groupId&gt;
+            &lt;artifactId&gt;hutool-core&lt;/artifactId&gt;
+            &lt;version&gt;LATEST&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- aop注解 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+            &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+            &lt;version&gt;1.9.4&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;</code></pre><h4 id="定义日志实体"><a href="#定义日志实体" class="headerlink" title="定义日志实体"></a>定义日志实体</h4><p>这里只是列举了一些简单的字段</p>
+<pre><code>@Data
+public class OperationLog {
+
+    private Long id;
+    private String operation;
+    private Long operatTime;
+    /**
+     * 操作结果：0成功；-1失败
+     */
+    private Short operatType;
+    /**
+     * 异常日志
+     */
+    private String exceptionLog;
+}</code></pre><h4 id="业务层"><a href="#业务层" class="headerlink" title="业务层"></a>业务层</h4><p>由于数据库操作并不是本文的重点，所以这里只是模拟数据库的新增操作。</p>
+<pre><code>public interface OperationLogService {
+
+    /**
+     * 新增日志
+     * @param operationLog
+     * @return
+     */
+    int insert(OperationLog operationLog);
+}</code></pre><pre><code>@Service
+public class OperationLogServiceImpl implements OperationLogService {
+    @Override
+    public int insert(OperationLog operationLog) {
+        System.out.println(operationLog);
+        System.out.println("日志新增成功");
+        return 1;
     }
+}</code></pre><h4 id="定义日志注解"><a href="#定义日志注解" class="headerlink" title="定义日志注解"></a>定义日志注解</h4><pre><code>@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Log {
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    String value();
+}</code></pre><h4 id="切面的实现"><a href="#切面的实现" class="headerlink" title="切面的实现"></a>切面的实现</h4><pre><code>@Aspect
+@Component
+public class LogAspect {
 
-    public int getAge() {
-        return age;
-    }
+    @Autowired
+    private OperationLogService operationLogService;
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-}</code></pre><h4 id="NoArgsConstructor-RequiredArgsConstructor-and-AllArgsConstructor"><a href="#NoArgsConstructor-RequiredArgsConstructor-and-AllArgsConstructor" class="headerlink" title="@NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor"></a>@NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>这三个注解都是类注解。      @NoArgsConstructor会生成一个无参构造器。值得注意的是，在Java中类没有构造器，会默认生成一个无参构造器，那么@NoArgsConstructor还有什么作用呢？这个后续会解释道。</p>
-<pre><code>@NoArgsConstructor
-public class NoArgsConstructorDemo {
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class NoArgsConstructorDemo {
-}</code></pre><p>@RequiredArgsConstructor会生成一个带参构造器，这个参数包括final或者@NonNull修饰的成员变量。<strong>值得注意的是，如果@NonNull修饰的参数为null时，会在构造器中抛出NullPointerException异常。</strong></p>
-<pre><code>@RequiredArgsConstructor
-public class RequiredArgsConstructorDemo {
-    private final String name;
-    private int age;
-    @NonNull private String house;
-
-    public static void main(String[] args) {
-        RequiredArgsConstructorDemo requiredArgsConstructorDemo = new RequiredArgsConstructorDemo("smile2coder", "big house");
-    }
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class RequiredArgsConstructorDemo {
-    private final String name;
-    private int age;
-    private String house;
-
-    public RequiredArgsConstructorDemo(String name, String house) {
-        if (house == null) {
-            throw new NullPointerException("house is marked non-null but is null");
-        }
-        this.name = name;
-        this.house = house;
-    }
-
-    public static void main(String[] args) {
-        RequiredArgsConstructorDemo requiredArgsConstructorDemo = new RequiredArgsConstructorDemo("smile2coder", "big house");
-    }
-}</code></pre><p>@AllArgsConstructor会生成一个全参的构造器</p>
-<pre><code>@AllArgsConstructor
-public class AllArgsConstructorDemo {
-    private String name;
-    private int age;
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class AllArgsConstructorDemo {
-    private String name;
-    private int age;
-
-    public AllArgsConstructorDemo(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-}</code></pre><p>有个点需要注意，使用@RequiredArgsConstructor和@AllArgsConstructor生成构造器，则不会再生成默认的无参构造器。而在许多框架中需要用到无参构造器，这时就需要配合@NoArgsConstructor使用啦。</p>
-<p>使用这三个注解还可以生成静态工厂类</p>
-<pre><code>@RequiredArgsConstructor(staticName = "of")
-public class StaticNameDemo {
-    private final String name;
-    private int age;
-
-    public static void main(String[] args) {
-        StaticNameDemo smile2coder = StaticNameDemo.of("smile2coder");
-    }
-}
-</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class StaticNameDemo {
-    private final String name;
-    private int age;
-
-    public StaticNameDemo(String name) {
-        this.name = name;
+    @Pointcut(value = "@annotation(com.smile2coder.springboot.aspect.Log)")
+    public void pointcut() {
     }
 
-    public static StaticNameDemo of(String name) {
-        return new StaticNameDemo(name);
-    }
-
-    public static void main(String[] args) {
-        StaticNameDemo smile2coder = StaticNameDemo.of("smile2coder");
-    }
-}</code></pre><h4 id="Data"><a href="#Data" class="headerlink" title="@Data"></a>@Data</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@Data恐怕是我们用到最多的啦，那么它的作用是什么呢？当@Data修饰在类上时，相当于@Getter, @Setter, @ToString, @EqualsAndHashCode和@RequiredArgsConstructor的功能联合体。让我们简单中寻找更简单的方式。</p>
-<h4 id="Builder"><a href="#Builder" class="headerlink" title="@Builder"></a>@Builder</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>构建者模式，一种一步步构建复杂类的设计模式。当不用Lombok时，我们来看一下怎么写</p>
-<pre><code>public class BuilderDemo {
-    private String name;
-    private int age;
-    public BuilderDemo(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-    public static BuilderDemoBuilder builder() {
-        return new BuilderDemoBuilder();
-    }
-
-    public static class BuilderDemoBuilder {
-        private String name;
-        private int age;
-        public BuilderDemoBuilder name(String name) {
-            this.name = name;
-            return this;
-        }
-        public BuilderDemoBuilder age(int age) {
-            this.age = age;
-            return this;
-        }
-        public BuilderDemo build() {
-            return new BuilderDemo(name, age);
-        }
-    }
-
-    public static void main(String[] args) {
-        BuilderDemo smile2coder = BuilderDemo.builder().name("smile2coder").age(11).build();
-        System.out.println(smile2coder);
-    }
-}</code></pre><p>这还不是一个复杂的类，写起来都这么复杂了…如果是一个复杂的类，保守估计都要2根头发的代价。我们来看一下Lombok怎么写</p>
-<pre><code>@Builder
-public class BuilderDemo {
-    private String name;
-    private int age;
-
-    public static void main(String[] args) {
-        BuilderDemo smile2coder = BuilderDemo.builder().name("smile2coder").age(11).build();
-    }
-}</code></pre><p><strong>世界都安静了…</strong></p>
-<h4 id="Log"><a href="#Log" class="headerlink" title="@Log"></a>@Log</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@Log注解也是我比较常用的。日志是常见的开发手段，没有日志的代码是没有灵魂的。<br>让我们来看看以前是怎么写的</p>
-<pre><code>public class LogDemo {
-    private static Logger log = LoggerFactory.getLogger(LogDemo.class);
-    public static void main(String[] args) {
-        log.info("smile2coder");
-    }
-}</code></pre><p>有人说这不是很简单吗？看一下Lombok再说吧</p>
-<pre><code>@Log
-public class LogDemo {
-    public static void main(String[] args) {
-        log.info("smile2coder");
-    }
-}</code></pre><h4 id="Cleanup"><a href="#Cleanup" class="headerlink" title="@Cleanup"></a>@Cleanup</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@Cleanup可以用来确保在代码执行路径退出当前作用域之前自动清除给定的资源。默认情况下，退出当前作用域前会调用资源的close()方法，当然，你也可以指定一个无参方法。<br><strong>值得注意的是，当close()方法中包含参数的话，此方法不会被自动调用</strong></p>
-<pre><code>public class CleanupDemo {
-
-    public static void main(String[] args) throws IOException {
-        @Cleanup InputStream inputStream = new FileInputStream(new File("/home/smile2coder"));
-        //指定一个无参方法
-        @Cleanup("clean") CleanupDemo cleanupDemo = new CleanupDemo();
-    }
-
-    public void clean() {
-        System.out.println("clean");
-    }
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的，是不是简单了很多</p>
-<pre><code>public class CleanupDemo {
-
-    public static void main(String[] args) throws IOException {
-        InputStream inputStream = null;
+    @Around(value = "pointcut()")
+    public Object around(ProceedingJoinPoint pjp) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object proceed;
         try {
-            inputStream = new FileInputStream(new File("/home/smile2coder"));
-        } finally {
-            if(inputStream != null) {
-                inputStream.close();
+            proceed = pjp.proceed();
+        } catch (Throwable throwable) {
+            save(pjp, start, throwable);
+            throw throwable;
+        }
+        save(pjp, start, null);
+        return proceed;
+    }
+
+    private void save(ProceedingJoinPoint pjp, long start, Throwable throwable) {
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        Method method = signature.getMethod();
+        try {
+            Log annotation = method.getAnnotation(Log.class);
+            String operation = annotation.value();
+
+            OperationLog operationLog = new OperationLog();
+            operationLog.setId(1L);
+            operationLog.setOperation(operation);
+            operationLog.setOperatTime(System.currentTimeMillis() - start);
+
+            if (throwable == null) {
+                operationLog.setOperatType((short)0);
+            }else {
+                operationLog.setOperatType((short)-1);
+                //如果有异常，保存堆栈信息  
+                operationLog.setExceptionLog(ExceptionUtil.stacktraceToString(throwable, 999));
             }
-        }
 
-        CleanupDemo cleanupDemo = null;
-        try {
-            cleanupDemo = new CleanupDemo();
-        } finally {
-            if(cleanupDemo != null) {
-                cleanupDemo.clean();
-            }
+            this.operationLogService.insert(operationLog);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}</code></pre><h4 id="控制层的应用"><a href="#控制层的应用" class="headerlink" title="控制层的应用"></a>控制层的应用</h4><pre><code>@RestController
+public class TestController {
 
-    public void clean() {
-        System.out.println("clean");
+    @RequestMapping("/test")
+    @Log(value = "这是一个测试接口")
+    public String test() {
+//        int i = 1/0;
+        return "success";
     }
-}</code></pre><h4 id="NonNull"><a href="#NonNull" class="headerlink" title="@NonNull"></a>@NonNull</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@NonNull可以在方法的参数和构造器的参数上为你生成一个“空值”判断代码块。在方法中，代码块将会插入在方法顶部；在构造器中，代码块将会在任何显式this()或者 super()方法调用后插入。<br><strong>值得注意的是，当方法中已经有“空值”判断代码块，@NonNull不会再生成代码。</strong></p>
-<pre><code>public class NonNullDemo {
-    @NonNull private String name;
-
-    public NonNullDemo(@NonNull String name) {
-        this.name = name;
-    }
-    public void demo(@NonNull String str) {
-        this.demo(str, "smile2coder");
-    }
-
-    public void demo(@NonNull String str1, String str2) {
-        System.out.println(str1 + " " + str2);
-    }
-
-    public static void main(String[] args) {
-        NonNullDemo nonNullDemo = new NonNullDemo("smile2coder");
-//        nonNullDemo.demo("hello");
-        nonNullDemo.demo(null);
-    }
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class NonNullDemo {
-    @NonNull private String name;
-
-    public NonNullDemo(@NonNull String name) {
-        if (name == null) {
-            throw new NullPointerException("name is marked non-null but is null");
-        }
-        this.name = name;
-    }
-    public void demo(String str) {
-        this.demo(str, "smile2coder");
-        if(str == null) {
-            throw new NullPointerException("str is marked non-null but is null");
-        }
-    }
-
-    public void demo(String str1, String str2) {
-        System.out.println(str1 + " " + str2);
-    }
-
-    public static void main(String[] args) {
-        NonNullDemo nonNullDemo = new NonNullDemo("smile2coder");
-//        nonNullDemo.demo("hello");
-        nonNullDemo.demo(null);
-    }
-}</code></pre><h4 id="ToString"><a href="#ToString" class="headerlink" title="@ToString"></a>@ToString</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@ToString会为类生成toString()方法。默认情况下，它会打印类的名，成员变量。每个成员变量以“,”分隔。当然，你也可以用以下参数定制打印变量。  </p>
-<ul>
-<li>boolean includeFieldNames() default true:是否打印变量</li>
-<li>String[] exclude() default {}:不打印的变量列表</li>
-<li>String[] of() default {}:打印的变量列表</li>
-<li>boolean callSuper() default false:是否调用父类toString()方法</li>
-<li>boolean doNotUseGetters() default false:打印是否调用Getter()方法</li>
-<li>boolean onlyExplicitlyIncluded() default false:默认打印非静态变量；当设置为true时，不再自动包含非静态变量</li>
-</ul>
-<p>我们还可以用注解的方式定制</p>
-<ul>
-<li>@ToString.Exclude:修饰在成员变量，表示不包含该变量</li>
-<li>@ToString.Include:修饰在成员变量，表示包含该变量（这是默认的）</li>
-</ul>
-<pre><code>@ToString
-public class ToStringDemo {
-
-    private String name;
-    private int age;
-
-    @ToString
-    static class ExcludeDemo {
-        @ToString.Exclude private String name;
-        private int age;
-    }
-    @ToString(exclude = {"name"})
-    static class ExcludeArrayDemo {
-        private String name;
-        private int age;
-    }
-    @ToString
-    static class IncludeDemo {
-        @ToString.Include private String name;
-        private int age;
-    }
-    @ToString(of = {"name"})
-    static class OfDemo {
-        private String name;
-        private int age;
-    }
-    @ToString(includeFieldNames = false)
-    static class IncludeFieldNamesDemo {
-        private String name;
-        private int age;
-    }
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class ToStringDemo {
-
-    private String name;
-    private int age;
-
-    @Override
-    public String toString() {
-        return "ToStringDemo(" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ')';
-    }
-    static class ExcludeDemo {
-        private String name;
-        private int age;
-        @Override
-        public String toString() {
-            return "ToStringDemo.ExcludeDemo(" +
-                    "age=" + age +
-                    ')';
-        }
-    }
-    static class ExcludeArrayDemo {
-        private String name;
-        private int age;
-        @Override
-        public String toString() {
-            return "ToStringDemo.ExcludeDemo(" +
-                    "age=" + age +
-                    ')';
-        }
-    }
-    static class IncludeDemo {
-        private String name;
-        private int age;
-        @Override
-        public String toString() {
-            return "ToStringDemo.IncludeDemo(" +
-                    "name='" + name + '\'' +
-                    ", age=" + age +
-                    ')';
-        }
-    }
-    static class OfDemo {
-        private String name;
-        private int age;
-        @Override
-        public String toString() {
-            return "ToStringDemo.OfDemo(" +
-                    "name='" + name + '\'' +
-                    ')';
-        }
-    }
-    static class IncludeFieldNamesDemo {
-        private String name;
-        private int age;
-        @Override
-        public String toString() {
-            return "ToStringDemo.IncludeFieldNamesDemo()";
-        }
-    }
-}</code></pre><h4 id="EqualsAndHashCode"><a href="#EqualsAndHashCode" class="headerlink" title="@EqualsAndHashCode"></a>@EqualsAndHashCode</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@EqualsAndHashCode会为类生成equals()和hashCode()方法。用法和@ToString类似</p>
-<pre><code>@EqualsAndHashCode
-public class EqualsAndHashCodeDemo {
-    private String name;
-    private int age;
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class EqualsAndHashCodeDemo {
-    private String name;
-    private int age;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EqualsAndHashCodeDemo)) return false;
-        EqualsAndHashCodeDemo that = (EqualsAndHashCodeDemo) o;
-        return age == that.age &amp;&amp;
-                Objects.equals(name, that.name);
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, age);
-    }
-}</code></pre><h4 id="Value"><a href="#Value" class="headerlink" title="@Value"></a>@Value</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@Value是@Data的不可变形式；默认情况下，所有变量都设为私有和最终字段，并且不会生成setters。默认情况下，该类本身也将最终确定为final，因为不可改变性不能强加于子类。像@Data一样，还会生成有用的toString（），equals（）和hashCode（）方法，每个字段都有一个getter方法，并且还会生成一个覆盖每个参数的构造函数（除了在字段声明中初始化的最终字段之外） 。</p>
-<h4 id="SneakyThrows"><a href="#SneakyThrows" class="headerlink" title="@SneakyThrows"></a>@SneakyThrows</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@SneakyThrows可用于偷偷地抛出已检查的异常，而无需在方法的throws子句中实际声明。<strong>值得注意的是，不建议使用</strong></p>
-<pre><code>public class SneakyThrowsDemo {
-    @SneakyThrows(UnsupportedEncodingException.class)
-    public String utf8ToString(byte[] bytes) {
-        return new String(bytes, "UTF-8");
-    }
-
-    @SneakyThrows
-    public void run() {
-        throw new Throwable();
-    }
-}</code></pre><pre><code>public class SneakyThrowsDemo {
-    public String utf8ToString(byte[] bytes) {
-        try {
-            return new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw Lombok.sneakyThrow(e);
-        }
-    }
-
-    public void run() {
-        try {
-            throw new Throwable();
-        } catch (Throwable t) {
-            throw Lombok.sneakyThrow(t);
-        }
-    }
-}</code></pre><h4 id="Synchronized"><a href="#Synchronized" class="headerlink" title="@Synchronized"></a>@Synchronized</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>@Synchronized是同步方法修饰符的更安全的变体。与同步一样，注释只能在静态和实例方法上使用。它的操作类似于synced关键字，但是它锁定在不同的对象上。关键字对此进行了锁定，但注解锁定了一个名为$ lock的私有字段。 如果该字段不存在，则会为您创建。如果注释静态方法，则注释将锁定在名为$ LOCK的静态字段上。当然，你也可以指定锁。</p>
-<pre><code>public class SynchronizedDemo {
-    private final Object readLock = new Object();
-
-    @Synchronized
-    public static void hello() {
-        System.out.println("smile2coder");
-    }
-    @Synchronized
-    public int answerToLife() {
-        return 42;
-    }
-    @Synchronized("readLock")
-    public void foo() {
-        System.out.println("smile2coder");
-    }
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class SynchronizedDemo {
-    private static final Object $LOCK = new Object[0];
-    private final Object $lock = new Object[0];
-    private final Object readLock = new Object();
-
-    public static void hello() {
-        synchronized($LOCK) {
-            System.out.println("smile2coder");
-        }
-    }
-    public int answerToLife() {
-        synchronized($lock) {
-            return 42;
-        }
-    }
-    public void foo() {
-        synchronized(readLock) {
-            System.out.println("smile2coder");
-        }
-    }
-}</code></pre><h4 id="val"><a href="#val" class="headerlink" title="val"></a>val</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 我们可以使用val作为本地变量的类型来代替该变量的真正的类型，该本地变量也会被修饰为final。val只能用在本地变量和循环遍历中的变量。 <strong>值得注意的是，val不能在NetBeans中正确的使用。</strong></p>
-<pre><code>public class ValDemo {
-    public void demo() {
-        val string = "hello springboot";
-        System.out.println(string);
-
-        val list = new ArrayList&lt;String&gt;();
-        list.add("smile2coder");
-        list.forEach(e -&gt; {
-            System.out.println(e);
-        });
-
-        val map = new HashMap&lt;String, String&gt;();
-        map.put("smile2coder", "hello springboot");
-        System.out.println(map.get("smile2coder"));
-    }
-}</code></pre><p>以上Lombok写法，和下面的写法是等价的</p>
-<pre><code>public class ValDemo {
-    public void demo() {
-        final String string = "hello springboot";
-        System.out.println(string);
-
-        final List&lt;String&gt; list = new ArrayList&lt;&gt;();
-        list.add("smile2coder");
-        list.forEach(e -&gt; {
-            System.out.println(e);
-        });
-
-        final Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
-        map.put("smile2coder", "hello springboot");
-        System.out.println(map.get("smile2coder"));
-    }
-}</code></pre><h4 id="var"><a href="#var" class="headerlink" title="var"></a>var</h4><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var的用法和val的用法基本一致，除了变量不会被修饰为final。<br><strong>值得注意的是，虽然变量不会被修饰为final，但是已经确定的类型是不会再改变的。</strong> 例如</p>
-<pre><code>var x = "smile2coder"; 
-x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型时，编译器会提示错误</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上就是Lombok的全部内容，相信使用后会大大提高编码效率，目前许多优秀的开源软件都在使用，还等什么呢。<br>初来乍到，请多指教，本文中有什么错误，请联系我修改，十分感谢</p>
-<p>本文的代码在<a href="https://github.com/smile2coder/springboot-collection" target="_blank" rel="noopener">这里</a>，希望收到一个star，感谢支持</p>
+}</code></pre><h4 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h4><p>正常结果:</p>
+<pre><code>OperationLog(id=1, operation=这是一个测试接口, operatTime=21, operatType=0, exceptionLog=null)
+日志新增成功</code></pre><p>异常结果:</p>
+<pre><code>OperationLog(id=1, operation=这是一个测试接口, operatTime=10, operatType=-1, exceptionLog=java.lang.ArithmeticException: / by zero
+    at com.smile2coder.springboot.controller.TestController.test(TestController.java:18)
+    at com.smile2coder.springboot.controller.TestController$$FastClassBySpringCGLIB$$d515e671.invoke(&lt;generated&gt;)
+    at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
+    at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:769)
+    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+    at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:747)
+    at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:88)
+    at com.smile2coder.springboot.aspect.LogAspect.around(LogAspect.java:39)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.r)
+日志新增成功</code></pre><p>本文中有什么错误，请联系我修改，十分感谢</p>
+<p>本文的代码在<a href="https://github.com/smile2coder/springboot-collection" target="_blank" rel="noopener">这里</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1002,7 +683,7 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://smile2coder.github.io/lombok-ni-de-kai-fa-li-qi/">https://smile2coder.github.io/lombok-ni-de-kai-fa-li-qi/</a>
+                    <a href="https://smile2coder.github.io/springboot-ying-yong-zhong-li-yong-aop-shi-xian-cao-zuo-ri-zhi-ji-lu/">https://smile2coder.github.io/springboot-ying-yong-zhong-li-yong-aop-shi-xian-cao-zuo-ri-zhi-ji-lu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1040,8 +721,16 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/lombok/">
-                                    <span class="chip bg-color">lombok</span>
+                                <a href="/tags/AOP/">
+                                    <span class="chip bg-color">AOP</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97/">
+                                    <span class="chip bg-color">记录日志</span>
+                                </a>
+                            
+                                <a href="/tags/SpringBoot/">
+                                    <span class="chip bg-color">SpringBoot</span>
                                 </a>
                             
                         </div>
@@ -1082,9 +771,10 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/springboot-ying-yong-zhong-li-yong-aop-shi-xian-cao-zuo-ri-zhi-ji-lu/">
                     <div class="card-image">
@@ -1102,9 +792,9 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-01-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1117,6 +807,7 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -1140,7 +831,7 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/lombok-ni-de-kai-fa-li-qi/">
@@ -1174,7 +865,6 @@ x = 1; //x已经确定为java.lang.String类型，当x再被赋值为int类型�
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
