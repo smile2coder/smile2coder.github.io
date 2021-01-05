@@ -546,18 +546,13 @@
 <h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>当前数据库中的数据信息如下：</p>
 <p><img src="image-20201217100741886.png" alt="image-20201217100741886.png"></p>
 <p>以下示例是 RR 的隔离级别下：</p>
-<img src="MySQL数据库MVCC原理浅析/image-20201217103031462.png" alt="image-20201217103031462" style="zoom:80%;">
-
+<p><img src="image-20201217103031462.png" alt="image-20201217103031462.png"></p>
 <p>此时的 undo log 中的结构如下所示：</p>
-<img src="MySQL数据库MVCC原理浅析/image-20201217100544483.png" alt="image-20201217100544483" style="zoom:50%;">
-
-
-
+<p><img src="image-20201217100544483.png" alt="image-20201217100544483.png"></p>
 <h2 id="RR真的保证了不幻读？"><a href="#RR真的保证了不幻读？" class="headerlink" title="RR真的保证了不幻读？"></a>RR真的保证了不幻读？</h2><p>在如果事务B在事务A执行中, insert了一条数据并提交, 事务A再次查询, 虽然读取的是undo中的旧版本数据(防止了部分幻读), 但是事务A中执行update或者delete都是可以成功的!!</p>
 <p>在RR级别下，快照读是通过MVVC(多版本控制)和undo log来实现的，当前读是通过加record lock(记录锁)和gap lock(间隙锁)来实现的。<br>InnoDB在快照读的情况下并没有真正的避免幻读, 但是在当前读的情况下避免了不可重复读和幻读!!!</p>
 <p>证明示例：</p>
-<img src="MySQL数据库MVCC原理浅析/image-20201217110611515.png" alt="image-20201217110611515" style="zoom:60%;">
-
+<p><img src="image-20201217110611515.png" alt="image-20201217110611515.png"></p>
 <p>参考链接</p>
 <p><a href="https://www.cnblogs.com/taek/p/6612728.html" target="_blank" rel="noopener">https://www.cnblogs.com/taek/p/6612728.html</a></p>
 <p><a href="https://segmentfault.com/a/1190000012650596" target="_blank" rel="noopener">https://segmentfault.com/a/1190000012650596</a></p>
