@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="SpringBoot应用中利用AOP实现操作日志记录, Java">
-    <meta name="description" content="SpringBoot应用中利用AOP实现操作日志记录">
+    <meta name="keywords" content="MySQL数据库MVCC原理浅析, Java">
+    <meta name="description" content="MySQL数据库MVCC原理浅析概念阿里数据库内核’2017/12’月报中对MySQL数据库MVCC原理浅析的解释是:
+指的是一种提高并发的技术。最早的数据库系统，只有读读之间可以并发，读写，写读，写写都要阻塞。引入多版本之后，只有写写之间">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SpringBoot应用中利用AOP实现操作日志记录 | smile2coder</title>
+    <title>MySQL数据库MVCC原理浅析 | smile2coder</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -303,12 +304,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">SpringBoot应用中利用AOP实现操作日志记录</h1>
+                    <h1 class="description center-align post-title">MySQL数据库MVCC原理浅析</h1>
                 </div>
             </div>
         </div>
@@ -423,33 +424,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/AOP/">
-                                <span class="chip bg-color">AOP</span>
-                            </a>
-                        
-                            <a href="/tags/%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97/">
-                                <span class="chip bg-color">记录日志</span>
-                            </a>
-                        
-                            <a href="/tags/SpringBoot/">
-                                <span class="chip bg-color">SpringBoot</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/SpringBoot/" class="post-category">
-                                SpringBoot
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -458,7 +438,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-01-20
+                    2020-12-15
                 </div>
                 
 
@@ -467,14 +447,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    831
+                    1.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    4 分
+                    6 分
                 </div>
                 
 
@@ -490,156 +470,99 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h4 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h4><p>在SpringBoot应用开发中，记录用户的操作日志是必不可少的，下面介绍一下利用AOP实现操作日志记录。  </p>
-<p>本文使用了Lombok，不懂的同学建议了解一下</p>
-<h4 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h4><p>首先构建一个SpringBoot项目，引入依赖</p>
-<pre><code>&lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-        &lt;/dependency&gt;
+                <h2 id="MySQL数据库MVCC原理浅析概念"><a href="#MySQL数据库MVCC原理浅析概念" class="headerlink" title="MySQL数据库MVCC原理浅析概念"></a>MySQL数据库MVCC原理浅析概念</h2><p><a href="http://mysql.taobao.org/monthly/2017/12/01/" target="_blank" rel="noopener">阿里数据库内核’2017/12’月报</a>中对MySQL数据库MVCC原理浅析的解释是:</p>
+<p>指的是一种提高并发的技术。最早的数据库系统，只有读读之间可以并发，读写，写读，写写都要阻塞。引入多版本之后，只有写写之间相互阻塞，其他三种操作都可以并行，这样大幅度提高了InnoDB的并发度。在内部实现中，与Postgres在数据行上实现多版本不同，InnoDB是在undolog中实现的，通过undolog可以找回数据的历史版本。找回的数据历史版本可以提供给用户读(按照隔离级别的定义，有些读请求只能看到比较老的数据版本)，也可以在回滚的时候覆盖数据页上的数据。在InnoDB内部中，会记录一个全局的活跃读写事务数组，其主要用来判断事务的可见性。</p>
+<h2 id="MySQL的三个隐藏列"><a href="#MySQL的三个隐藏列" class="headerlink" title="MySQL的三个隐藏列"></a>MySQL的三个隐藏列</h2><ol>
+<li><p><font color="red">6字节的事务ID(DB_TRX_ID)字段</font>: 用来标识创建本条记录的事务的标识符, 即事务ID。</p>
+</li>
+<li><p><font color="red">7字节的回滚指针(DB_ROLL_PTR)字段</font>: 指向回滚段(rollback segment)的 undo log record (历史版本记录)。</p>
+</li>
+<li><p><font color="red">6字节的行ID(DB_ROW_ID)字段</font>:一个单调递增的行 ID。如果表中没有指定主键或者合适的唯一索引，InnoDB 无法生成聚簇索引时，InnoDB 会以 DB_ROW_ID 字段为主键生成聚簇索引。</p>
+</li>
+</ol>
+<h2 id="当前读和快照读"><a href="#当前读和快照读" class="headerlink" title="当前读和快照读"></a>当前读和快照读</h2><ol>
+<li><p>当前读: 读的是最新记录（因为会对需要读取的记录加锁，其它事务不会修改记录，所以保证数据是最新的记录）</p>
+<ul>
+<li>select … lock in share model</li>
+<li>select … for update</li>
+<li>insert</li>
+<li>update</li>
+<li>delete</li>
+</ul>
+</li>
+<li><p>快照读: 读的是存在于 undo log 中对于当前事务可见的历史版本</p>
+<ul>
+<li>不加锁的 select 操作</li>
+</ul>
+</li>
+</ol>
+<h2 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h2><ol>
+<li><p>undo log 是 InnoDB MySQL数据库MVCC原理浅析 事务特性的重要组成部分。当我们对记录做了变更操作时就会产生 undo 记录，undo 记录默认被记录到系统表空间(ibdata)中，但从5.6开始，也可以使用独立的表空间。</p>
+</li>
+<li><p>undo log 中记录的是老版本的记录，当一个事务读取数据时，以可见性算法判断当前数据行是否对当前事务可见，如果不可见，则根据当前数据行的 DB_ROLL_PTR 找到下一条数据，继续判断。</p>
+</li>
+</ol>
+<blockquote>
+<p>新增/更新/删除操作数据行时，对应的实际操作</p>
+</blockquote>
+<ul>
+<li><p>新增行：新增一条数据，将 DB_TRX_ID 置为当前事务ID</p>
+</li>
+<li><p>更新行：复制一份本行数据到 undo log，再更新本数据的DB_TRX_ID 置为当前事务ID，DB_ROLL_PTR 字段指向 undo log 中的旧数据（一行数据的历史版本存在于 undo log中，并且以链表的结构存在）</p>
+</li>
+<li><p>删除行：不会直接将数据删除，只是在 <code>record header</code> 中更新删除位（deleted_flag）表示已删除，待purge进程将其真正删除</p>
+</li>
+</ul>
+<h2 id="Read-view"><a href="#Read-view" class="headerlink" title="Read view"></a>Read view</h2><p>InnoDB支持MySQL数据库MVCC原理浅析多版本，其中 RC（Read Committed）和 RR（Repeatable Read）隔离级别是利用 read view（一致读视图）方式支持的。 所谓 read view 就是在<strong>某一时刻</strong>给事务创建 snapshot（快照），把<strong>当时状态（包括活跃读写事务数组）</strong>记下来，之后的所有读操作根据其事务 ID（即trx_id）与 snapshot 中的状态作比较，以此判断数据行对于本事务的可见性。</p>
+<blockquote>
+<p>Read view 中保存的数据结构包括？</p>
+</blockquote>
+<ul>
+<li><p>low_limit_id：当前活跃读写事务数组的最大值 +1（也就是创建快照时刻的下一个未开启的事务ID）</p>
+</li>
+<li><p>up_limit_id：当前活跃读写事务数组的最小值</p>
+</li>
+<li><p>rw_trx_ids：当前活跃读写事务数组（数组中是不包含本事务ID 的）</p>
+</li>
+</ul>
+<blockquote>
+<p>RC 和 RR 隔离级别是利用 read view（一致读视图）方式支持的，那么是怎么实现不同的可见性？</p>
+</blockquote>
+<ul>
+<li><p>RC 级别的事务中，每条 select 操作都会创建一个快照。</p>
+</li>
+<li><p>RR 级别的事务中，在 begin/start transaction 之后的第一条 select 操作后创建一个快照。</p>
+<p>这里有一个值得注意的点，对于 RR 来说，对<strong>同一个表或者不同表</strong>进行的<strong>第一次</strong> select 语句建立了该事务的快照. 其它update, delete, insert 语句和快照的建立没有关系。在snapshot建立之后提交的数据，一致性读就读不到，之前提交的数据就可以读到（示例见下面举例中的事务1001和事务1002）。</p>
+</li>
+</ul>
+<h2 id="可见性算法"><a href="#可见性算法" class="headerlink" title="可见性算法"></a>可见性算法</h2><p>设当前数据行的创建事务ID：db_trx_id</p>
+<p>当前事务的 read view：low_limit_id、up_limit_id、rw_trx_ids</p>
+<ol>
+<li><code>db_trx_id &lt; up_limit_id</code>: 当前行数据是在本事务开启之前就提交的，所以对于本事务是可见；</li>
+<li><code>db_trx_id &gt;= low_limit_id</code>: 当前行数据是在本事务开启之后创建的，所以对于本事务是不可见的；</li>
+<li><code>db_trx_id not in (rw_trx_ids)</code>: 当前行数据是本事务创建的，所以对于本事务是可见；</li>
+<li><code>low_limit_id &lt; db_trx_id &lt; up_limit_id</code>: 当前行数据是在本事务开启时，依然活跃的事务创建的，即使此时该事务已经提交，但是对于本事务来说，当前行数据依然是不可见的。此时，要根据当前行数据的 DB_ROLL_PTR 找到历史版本记录，跳到步骤1重新判断。</li>
+</ol>
+<h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>当前数据库中的数据信息如下：</p>
+<img src="MySQL数据库MVCC原理浅析.assets/image-20201217100741886.png" alt="image-20201217100741886" style="zoom:50%;">
 
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
-            &lt;artifactId&gt;lombok&lt;/artifactId&gt;
-            &lt;optional&gt;true&lt;/optional&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
-            &lt;scope&gt;test&lt;/scope&gt;
-            &lt;exclusions&gt;
-                &lt;exclusion&gt;
-                    &lt;groupId&gt;org.junit.vintage&lt;/groupId&gt;
-                    &lt;artifactId&gt;junit-vintage-engine&lt;/artifactId&gt;
-                &lt;/exclusion&gt;
-            &lt;/exclusions&gt;
-        &lt;/dependency&gt;
-        &lt;!-- 一个工具包 --&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;cn.hutool&lt;/groupId&gt;
-            &lt;artifactId&gt;hutool-core&lt;/artifactId&gt;
-            &lt;version&gt;LATEST&lt;/version&gt;
-        &lt;/dependency&gt;
-        &lt;!-- aop注解 --&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
-            &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
-            &lt;version&gt;1.9.4&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;</code></pre><h4 id="定义日志实体"><a href="#定义日志实体" class="headerlink" title="定义日志实体"></a>定义日志实体</h4><p>这里只是列举了一些简单的字段</p>
-<pre><code>@Data
-public class OperationLog {
+<p>以下示例是 RR 的隔离级别下：</p>
+<img src="MySQL数据库MVCC原理浅析.assets/image-20201217103031462.png" alt="image-20201217103031462" style="zoom:80%;">
 
-    private Long id;
-    private String operation;
-    private Long operatTime;
-    /**
-     * 操作结果：0成功；-1失败
-     */
-    private Short operatType;
-    /**
-     * 异常日志
-     */
-    private String exceptionLog;
-}</code></pre><h4 id="业务层"><a href="#业务层" class="headerlink" title="业务层"></a>业务层</h4><p>由于数据库操作并不是本文的重点，所以这里只是模拟数据库的新增操作。</p>
-<pre><code>public interface OperationLogService {
+<p>此时的 undo log 中的结构如下所示：</p>
+<img src="MySQL数据库MVCC原理浅析.assets/image-20201217100544483.png" alt="image-20201217100544483" style="zoom:50%;">
 
-    /**
-     * 新增日志
-     * @param operationLog
-     * @return
-     */
-    int insert(OperationLog operationLog);
-}</code></pre><pre><code>@Service
-public class OperationLogServiceImpl implements OperationLogService {
-    @Override
-    public int insert(OperationLog operationLog) {
-        System.out.println(operationLog);
-        System.out.println("日志新增成功");
-        return 1;
-    }
-}</code></pre><h4 id="定义日志注解"><a href="#定义日志注解" class="headerlink" title="定义日志注解"></a>定义日志注解</h4><pre><code>@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Log {
 
-    String value();
-}</code></pre><h4 id="切面的实现"><a href="#切面的实现" class="headerlink" title="切面的实现"></a>切面的实现</h4><pre><code>@Aspect
-@Component
-public class LogAspect {
 
-    @Autowired
-    private OperationLogService operationLogService;
+<h2 id="RR真的保证了不幻读？"><a href="#RR真的保证了不幻读？" class="headerlink" title="RR真的保证了不幻读？"></a>RR真的保证了不幻读？</h2><p>在如果事务B在事务A执行中, insert了一条数据并提交, 事务A再次查询, 虽然读取的是undo中的旧版本数据(防止了部分幻读), 但是事务A中执行update或者delete都是可以成功的!!</p>
+<p>在RR级别下，快照读是通过MVVC(多版本控制)和undo log来实现的，当前读是通过加record lock(记录锁)和gap lock(间隙锁)来实现的。<br>InnoDB在快照读的情况下并没有真正的避免幻读, 但是在当前读的情况下避免了不可重复读和幻读!!!</p>
+<p>证明示例：</p>
+<img src="MySQL数据库MVCC原理浅析.assets/image-20201217110611515.png" alt="image-20201217110611515" style="zoom:60%;">
 
-    @Pointcut(value = "@annotation(com.smile2coder.springboot.aspect.Log)")
-    public void pointcut() {
-    }
-
-    @Around(value = "pointcut()")
-    public Object around(ProceedingJoinPoint pjp) throws Throwable {
-        long start = System.currentTimeMillis();
-        Object proceed;
-        try {
-            proceed = pjp.proceed();
-        } catch (Throwable throwable) {
-            save(pjp, start, throwable);
-            throw throwable;
-        }
-        save(pjp, start, null);
-        return proceed;
-    }
-
-    private void save(ProceedingJoinPoint pjp, long start, Throwable throwable) {
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-        Method method = signature.getMethod();
-        try {
-            Log annotation = method.getAnnotation(Log.class);
-            String operation = annotation.value();
-
-            OperationLog operationLog = new OperationLog();
-            operationLog.setId(1L);
-            operationLog.setOperation(operation);
-            operationLog.setOperatTime(System.currentTimeMillis() - start);
-
-            if (throwable == null) {
-                operationLog.setOperatType((short)0);
-            }else {
-                operationLog.setOperatType((short)-1);
-                //如果有异常，保存堆栈信息  
-                operationLog.setExceptionLog(ExceptionUtil.stacktraceToString(throwable, 999));
-            }
-
-            this.operationLogService.insert(operationLog);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}</code></pre><h4 id="控制层的应用"><a href="#控制层的应用" class="headerlink" title="控制层的应用"></a>控制层的应用</h4><pre><code>@RestController
-public class TestController {
-
-    @RequestMapping("/test")
-    @Log(value = "这是一个测试接口")
-    public String test() {
-//        int i = 1/0;
-        return "success";
-    }
-}</code></pre><h4 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h4><p>正常结果:</p>
-<pre><code>OperationLog(id=1, operation=这是一个测试接口, operatTime=21, operatType=0, exceptionLog=null)
-日志新增成功</code></pre><p>异常结果:</p>
-<pre><code>OperationLog(id=1, operation=这是一个测试接口, operatTime=10, operatType=-1, exceptionLog=java.lang.ArithmeticException: / by zero
-    at com.smile2coder.springboot.controller.TestController.test(TestController.java:18)
-    at com.smile2coder.springboot.controller.TestController$$FastClassBySpringCGLIB$$d515e671.invoke(&lt;generated&gt;)
-    at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)
-    at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:769)
-    at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
-    at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:747)
-    at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:88)
-    at com.smile2coder.springboot.aspect.LogAspect.around(LogAspect.java:39)
-    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-    at sun.r)
-日志新增成功</code></pre><p>本文中有什么错误，请联系我修改，十分感谢</p>
-<p>本文的代码在<a href="https://github.com/smile2coder/springboot-collection" target="_blank" rel="noopener">这里</a></p>
+<p>参考链接</p>
+<p><a href="https://www.cnblogs.com/taek/p/6612728.html" target="_blank" rel="noopener">https://www.cnblogs.com/taek/p/6612728.html</a></p>
+<p><a href="https://segmentfault.com/a/1190000012650596" target="_blank" rel="noopener">https://segmentfault.com/a/1190000012650596</a></p>
+<p><a href="https://www.cnblogs.com/digdeep/p/4947694.html" target="_blank" rel="noopener">https://www.cnblogs.com/digdeep/p/4947694.html</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -683,7 +606,7 @@ public class TestController {
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://smile2coder.github.io/springboot-ying-yong-zhong-li-yong-aop-shi-xian-cao-zuo-ri-zhi-ji-lu/">https://smile2coder.github.io/springboot-ying-yong-zhong-li-yong-aop-shi-xian-cao-zuo-ri-zhi-ji-lu/</a>
+                    <a href="https://smile2coder.github.io/mysql-shu-ju-ku-mvcc-yuan-li-qian-xi/">https://smile2coder.github.io/mysql-shu-ju-ku-mvcc-yuan-li-qian-xi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -720,19 +643,7 @@ public class TestController {
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/AOP/">
-                                    <span class="chip bg-color">AOP</span>
-                                </a>
-                            
-                                <a href="/tags/%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97/">
-                                    <span class="chip bg-color">记录日志</span>
-                                </a>
-                            
-                                <a href="/tags/SpringBoot/">
-                                    <span class="chip bg-color">SpringBoot</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -771,9 +682,10 @@ public class TestController {
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/mysql-shu-ju-ku-mvcc-yuan-li-qian-xi/">
                     <div class="card-image">
@@ -792,9 +704,9 @@ public class TestController {
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-12-15
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-15
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -803,6 +715,7 @@ public class TestController {
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -813,31 +726,31 @@ public class TestController {
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/lombok-ni-de-kai-fa-li-qi/">
+                <a href="/springboot-ying-yong-zhong-li-yong-aop-shi-xian-cao-zuo-ri-zhi-ji-lu/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Lombok-你的开发利器">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="SpringBoot应用中利用AOP实现操作日志记录">
                         
-                        <span class="card-title">Lombok-你的开发利器</span>
+                        <span class="card-title">SpringBoot应用中利用AOP实现操作日志记录</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Lombok-你的开发利器
+                            SpringBoot应用中利用AOP实现操作日志记录
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-01-20
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/lombok/" class="post-category">
-                                    lombok
+                            <a href="/categories/SpringBoot/" class="post-category">
+                                    SpringBoot
                                 </a>
                             
                             
@@ -847,8 +760,16 @@ public class TestController {
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/lombok/">
-                        <span class="chip bg-color">lombok</span>
+                    <a href="/tags/AOP/">
+                        <span class="chip bg-color">AOP</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%AE%B0%E5%BD%95%E6%97%A5%E5%BF%97/">
+                        <span class="chip bg-color">记录日志</span>
+                    </a>
+                    
+                    <a href="/tags/SpringBoot/">
+                        <span class="chip bg-color">SpringBoot</span>
                     </a>
                     
                 </div>
