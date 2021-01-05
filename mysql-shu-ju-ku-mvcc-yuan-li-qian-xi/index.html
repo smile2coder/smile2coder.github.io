@@ -544,8 +544,7 @@
 <li><code>low_limit_id &lt; db_trx_id &lt; up_limit_id</code>: 当前行数据是在本事务开启时，依然活跃的事务创建的，即使此时该事务已经提交，但是对于本事务来说，当前行数据依然是不可见的。此时，要根据当前行数据的 DB_ROLL_PTR 找到历史版本记录，跳到步骤1重新判断。</li>
 </ol>
 <h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>当前数据库中的数据信息如下：</p>
-<img src="MySQL数据库MVCC原理浅析/image-20201217100741886.png" alt="image-20201217100741886" style="zoom:50%;">
-
+<p><img src="image-20201217100741886.png" alt="image-20201217100741886.png"></p>
 <p>以下示例是 RR 的隔离级别下：</p>
 <img src="MySQL数据库MVCC原理浅析/image-20201217103031462.png" alt="image-20201217103031462" style="zoom:80%;">
 
